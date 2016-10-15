@@ -1,0 +1,13 @@
+ ------
+ Intro
+ ------
+ Marcel May
+ ------
+
+Introduction
+
+  The Maven Injection Plugin supports injection Maven properties into compiled classes.
+
+  Typical use case is if you need to programmatically provide project version or SCM version.
+
+  See {{{./usage.html} usage}} or {{{https://github.com/marcelmay/inject-maven-plugin/tree/master/src/it} integration test examples}}

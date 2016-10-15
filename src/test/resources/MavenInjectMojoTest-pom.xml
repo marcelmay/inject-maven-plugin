@@ -1,0 +1,50 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>de.m3y.maven</groupId>
+  <artifactId>inject-maven-plugin-test</artifactId>
+  <packaging>jar</packaging>
+  <version>0.1-SNAPSHOT</version>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+
+  <scm>
+    <connection>scm:git:https://github.com/greenmail-mail-test/greenmail.git</connection>
+  </scm>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-compat</artifactId>
+      <version>3.0.5</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>de.m3y.maven</groupId>
+        <artifactId>inject-maven-plugin</artifactId>
+        <version>0.1-SNAPSHOT</version>
+        <configuration>
+          <injections>
+            <injection>
+              <value>${project.version}</value>
+              <pointCuts>
+                <pointCut>de.m3y.maven.inject.it.ExampleInjection.VERSION</pointCut>
+                <pointCut>de.m3y.maven.inject.it.ExampleInjection.getVersionAsStringStatic</pointCut>
+              </pointCuts>
+            </injection>
+            <injection>
+              <value>${maven.build.timestamp}</value>
+              <pointCut>de.m3y.maven.inject.it.ExampleInjection.buildTimeDefault</pointCut>
+            </injection>
+          </injections>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>

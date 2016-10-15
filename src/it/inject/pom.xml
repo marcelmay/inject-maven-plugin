@@ -1,0 +1,94 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>de.m3y.maven</groupId>
+  <artifactId>inject-maven-plugin-it</artifactId>
+  <packaging>jar</packaging>
+  <version>@injectMavenPluginVersion@</version>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+
+  <scm>
+    <connection>scm:git:https://github.com/greenmail-mail-test/greenmail.git</connection>
+  </scm>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.testng</groupId>
+      <artifactId>testng</artifactId>
+      <version>6.9.10</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>buildnumber-maven-plugin</artifactId>
+        <version>1.4</version>
+        <executions>
+          <execution>
+            <phase>validate</phase>
+            <goals>
+              <goal>create</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <doCheck>false</doCheck>
+          <doUpdate>false</doUpdate>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>de.m3y.maven</groupId>
+        <artifactId>inject-maven-plugin</artifactId>
+        <version>@injectMavenPluginVersion@</version>
+        <configuration>
+          <injections>
+            <injection>
+              <value>${project.version}</value>
+              <pointCuts>
+                <pointCut>de.m3y.maven.inject.it.ExampleInjection.VERSION</pointCut>
+                <pointCut>de.m3y.maven.inject.it.ExampleInjection.getVersionAsStringStatic</pointCut>
+                <pointCut>de.m3y.maven.inject.it.ExampleInjection.getVersionAsString</pointCut>
+                <pointCut>de.m3y.maven.inject.it.ExampleInjection$InnerClass.VERSION</pointCut>
+                <pointCut>de.m3y.maven.inject.it.ExampleInjection$InnerClass.getVersionAsString</pointCut>
+                <pointCut>
+                  de.m3y.maven.inject.it.ExampleInjection$InnerClass.getVersionAsStringStatic
+                </pointCut>
+              </pointCuts>
+            </injection>
+            <injection>
+              <value>${maven.build.timestamp}</value>
+              <pointCuts>
+                <pointCut>de.m3y.maven.inject.it.ExampleInjection.buildTimeDefault</pointCut>
+                <pointCut>de.m3y.maven.inject.it.ExampleInjection.buildTimePublic</pointCut>
+                <pointCut>de.m3y.maven.inject.it.ExampleInjection.buildTimePublicFinal</pointCut>
+                <pointCut>de.m3y.maven.inject.it.ExampleInjection.getBuildTime</pointCut>
+              </pointCuts>
+            </injection>
+            <injection>
+              <value>${buildNumber}</value> <!-- Provided by buildnumber-maven-plugin -->
+              <pointCut>de.m3y.maven.inject.it.ExampleInjection.REVISION</pointCut>
+            </injection>
+            <injection>
+              <value>${scmBranch}</value> <!-- Provided by buildnumber-maven-plugin -->
+              <pointCut>de.m3y.maven.inject.it.ExampleInjection.getScmBranch</pointCut>
+            </injection>
+          </injections>
+        </configuration>
+        <executions>
+          <execution>
+            <phase>process-classes</phase>
+            <goals>
+              <goal>inject</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>
