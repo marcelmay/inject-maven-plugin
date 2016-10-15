@@ -5,6 +5,7 @@
   <artifactId>inject-maven-plugin-it</artifactId>
   <packaging>jar</packaging>
   <version>@injectMavenPluginVersion@</version>
+  <name>Maven injection plugin integration test</name>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
