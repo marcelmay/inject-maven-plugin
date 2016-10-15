@@ -32,6 +32,10 @@ public class ExampleInjection {
         return "To be replaced";
     }
 
+    public String getScmVersion() {
+        return "To be replaced";
+    }
+
     public static class InnerClass {
         public static final String VERSION = "To be replaced";
 

@@ -78,6 +78,10 @@
               <value>${scmBranch}</value> <!-- Provided by buildnumber-maven-plugin -->
               <pointCut>de.m3y.maven.inject.it.ExampleInjection.getScmBranch</pointCut>
             </injection>
+            <injection>
+              <value>${buildNumber}</value> <!-- Provided by buildnumber-maven-plugin -->
+              <pointCut>de.m3y.maven.inject.it.ExampleInjection.getScmVersion</pointCut>
+            </injection>
           </injections>
         </configuration>
         <executions>
@@ -88,6 +92,19 @@
             </goals>
           </execution>
         </executions>
+      </plugin>
+      <plugin>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>2.19.1</version>
+        <configuration>
+          <systemPropertyVariables>
+            <expected.version>${project.version}</expected.version>
+            <expected.branch>${scmBranch}</expected.branch>
+            <expected.build.time>${maven.build.timestamp}</expected.build.time>
+            <expected.scm.version>${buildNumber}</expected.scm.version>
+          </systemPropertyVariables>
+          <forkMode>once</forkMode>
+        </configuration>
       </plugin>
     </plugins>
   </build>
