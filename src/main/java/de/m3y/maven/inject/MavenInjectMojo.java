@@ -153,6 +153,9 @@ public class MavenInjectMojo extends AbstractMojo {
         SourceTarget sourceTarget = new SourceTarget();
         sourceTarget.clazzName = target.substring(0, idx);
         sourceTarget.attribute = target.substring(idx + 1);
+        if (getLog().isDebugEnabled()) {
+            getLog().debug("Extract class " + sourceTarget.clazzName + " and attribute/method " + sourceTarget.attribute);
+        }
         return sourceTarget;
     }
 
