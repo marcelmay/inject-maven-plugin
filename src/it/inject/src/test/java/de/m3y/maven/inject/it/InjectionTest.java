@@ -33,5 +33,7 @@ public class InjectionTest {
         assertEquals( new ExampleInjection().getScmBranch(), expectedBranch);
         // SCM Version
         assertEquals( new ExampleInjection().getScmVersion(), expectedScmVersion);
+
+        assertEquals(BuildInfo.INSTANCE.getProjectVersion(), expectedVersion);
     }
 }

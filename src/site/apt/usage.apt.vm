@@ -13,6 +13,7 @@ Using the Maven Injection Plugin
  For usage details see the {{{./inject-mojo.html} inject goal}} description.
 
  Hint: Inject into accessor methods instead of class attributes or constants to avoid surprises (compiler inlining etc.)
+ Hint: A typical singleton could use a Java Enum, see {{{https://github.com/marcelmay/inject-maven-plugin/tree/master/src/it/inject/src/main/java/de/m3y/maven/inject/it/BuildInfo.java}BuildInfo} example.
 
  [[3]] Hook plugin into lifecyle after compilation
 

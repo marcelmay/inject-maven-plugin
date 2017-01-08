@@ -83,6 +83,10 @@
               <value>${buildNumber}</value> <!-- Provided by buildnumber-maven-plugin -->
               <pointCut>de.m3y.maven.inject.it.ExampleInjection.getScmVersion</pointCut>
             </injection>
+            <injection>
+              <value>${project.version}</value>
+              <pointCut>de.m3y.maven.inject.it.BuildInfo.getProjectVersion</pointCut>
+            </injection>
           </injections>
         </configuration>
         <executions>
