@@ -93,6 +93,7 @@ public class MavenInjectMojo extends AbstractMojo {
     private void handleInject(ClassPool pool, String pointcut, String value) throws MojoFailureException {
         SourceTarget sourceTarget = parseSourceTarget(pointcut);
 
+        getLog().info("Injecting value '" + value + "' into " + pointcut);
         try {
             final CtClass clazz = pool.get(sourceTarget.clazzName);
             if (clazz.isFrozen()) {
