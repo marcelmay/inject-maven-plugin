@@ -16,6 +16,7 @@ Note:
 * It is possible to inject into Java class attribute fields, but be aware the the Java compiler inlines initialization into constructor,
   resulting in multiple initializations with last initialization wining.
 * Preferred injection is into accessor methods, resulting in least amount of surprise by compiler/JVM initialization specifics :-)
+* The plugin uses [Javassist](http://www.javassist.org/) byte code injection library
 
 Check out the [plugin web site][site] including [usage][site_usage] for details.
 
@@ -31,7 +32,7 @@ Development
 
     mvn clean install
 
-  Make sure you got [Maven 3.0.3+][maven_download] or higher.
+  Make sure you got [Maven 3.5+][maven_download] or higher.
 
 * Build the site
 

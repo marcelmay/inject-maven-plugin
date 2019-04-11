@@ -3,7 +3,9 @@ package de.m3y.maven.inject;
 import java.util.Arrays;
 
 /**
+ * Defines the injection by one or more pointcut(s) and value.
  *
+ * Example pointcut: <code>de.m3y.maven.inject.it.ExampleInjection.getBuildTime</code>
  */
 public class Injection {
     private String value;

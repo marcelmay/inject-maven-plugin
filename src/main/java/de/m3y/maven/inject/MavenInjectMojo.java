@@ -1,19 +1,15 @@
 package de.m3y.maven.inject;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
+
 import javassist.*;
 import org.apache.maven.artifact.DependencyResolutionRequiredException;
 import org.apache.maven.plugin.AbstractMojo;
-import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.*;
 import org.apache.maven.project.MavenProject;
-
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 /**
  * Injects properties into compiled Java code, as constant or method return value.
@@ -67,7 +63,7 @@ public class MavenInjectMojo extends AbstractMojo {
     @Parameter(property = "project.compileClasspathElements", required = true, readonly = true)
     private List<String> classpathElements;
 
-    public void execute() throws MojoExecutionException, MojoFailureException {
+    public void execute() throws MojoFailureException {
         ClassPool pool = createClassPool();
         for (Injection injection : injections) {
             doInject(injection, pool);
@@ -169,7 +165,6 @@ public class MavenInjectMojo extends AbstractMojo {
         try {
             List classpathElements = project.getCompileClasspathElements();
             ClassPool pool = ClassPool.getDefault();
-            Set<URL> urls = new HashSet<>();
             for (Object element : classpathElements) {
                 if (getLog().isDebugEnabled()) {
                     getLog().debug("Adding " + element + " to classpath");
