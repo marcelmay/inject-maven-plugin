@@ -164,7 +164,7 @@ public class MavenInjectMojo extends AbstractMojo {
 
     private ClassPool createClassPool() throws MojoFailureException {
         try {
-            List classpathElements = project.getCompileClasspathElements();
+            List<String> classpathElements = project.getCompileClasspathElements();
             ClassPool pool = ClassPool.getDefault();
             for (Object element : classpathElements) {
                 if (getLog().isDebugEnabled()) {

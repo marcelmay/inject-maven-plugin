@@ -25,6 +25,11 @@ Check out the [plugin website][site] including [usage][site_usage] for details.
 [repo-snapshot]: https://oss.sonatype.org/content/repositories/snapshots/de/m3y/maven/inject-maven-plugin/
 [buildnumber-maven-plugin]: https://github.com/mojohaus/buildnumber-maven-plugin
 
+Requirements
+-----------
+* Maven 3.6 or higher
+* Java 8 or higher
+
 Development
 -----------
 
