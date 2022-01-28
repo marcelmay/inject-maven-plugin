@@ -9,16 +9,16 @@ What is it good for?
 --------------------
 
 You can use the plugin to inject any properties, such as build information like build time or SCM version (provided as Maven properties by [buildnumber-maven-plugin]).
-The plugin hooks into the Maven lifecycle process-classes - so after compilation but before packaging into eg JAR.
+The plugin hooks into the Maven lifecycle process-classes - so after compilation but before packaging into e.g. JAR.
 
 Note:
-* It is possible to inject into Java constants, but be aware the the Java compiler inlines values during compilation.
-* It is possible to inject into Java class attribute fields, but be aware the the Java compiler inlines initialization into constructor,
+* It is possible to inject into Java constants, but be aware the Java compiler inlines values during compilation.
+* It is possible to inject into Java class attribute fields, but be aware the Java compiler inlines initialization into constructor,
   resulting in multiple initializations with last initialization wining.
-* Preferred injection is into accessor methods, resulting in least amount of surprise by compiler/JVM initialization specifics :-)
-* The plugin uses [Javassist](http://www.javassist.org/) byte code injection library
+* Preferred injection is into accessor methods, resulting in the least amount of surprise by compiler/JVM initialization specifics :-)
+* The plugin uses [Javassist](https://www.javassist.org/) byte code injection library
 
-Check out the [plugin web site][site] including [usage][site_usage] for details.
+Check out the [plugin website][site] including [usage][site_usage] for details.
 
 [site]: http://marcelmay.github.io/inject-maven-plugin/
 [site_usage]: https://marcelmay.github.io/inject-maven-plugin/usage.html
