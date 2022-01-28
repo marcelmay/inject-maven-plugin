@@ -32,7 +32,7 @@ Development
 
     mvn clean install
 
-  Make sure you got [Maven 3.5+][maven_download] or higher.
+  Make sure you got [Maven 3.6+][maven_download] or higher.
 
 * Build the site
 
