@@ -1,10 +1,8 @@
 package de.m3y.maven.inject.it;
 
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotEquals;
-import static org.testng.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class InjectionTest {
     @Test
@@ -15,25 +13,29 @@ public class InjectionTest {
         String expectedScmVersion = System.getProperty("expected.scm.version");
 
         // Constants
-        assertEquals(ExampleInjection.VERSION, expectedVersion);
-        assertEquals(ExampleInjection.VERSION2, "To be replaced");
+        assertEquals(expectedVersion, ExampleInjection.VERSION);
+        assertEquals("To be replaced", ExampleInjection.VERSION2);
         // Methods
-        assertEquals(new ExampleInjection().getVersionAsString(), expectedVersion);
-        assertEquals(ExampleInjection.getVersionAsStringStatic(), expectedVersion);
+        assertEquals(expectedVersion, new ExampleInjection().getVersionAsString());
+        assertEquals(expectedVersion, ExampleInjection.getVersionAsStringStatic());
         // Inner class
-        assertEquals(ExampleInjection.InnerClass.VERSION, expectedVersion);
-        assertEquals(new ExampleInjection.InnerClass().getVersionAsString(), expectedVersion);
-        assertEquals(ExampleInjection.InnerClass.getVersionAsStringStatic(), expectedVersion);
+        assertEquals(expectedVersion, ExampleInjection.InnerClass.VERSION);
+        assertEquals(expectedVersion, new ExampleInjection.InnerClass().getVersionAsString());
+        assertEquals(expectedVersion, ExampleInjection.InnerClass.getVersionAsStringStatic());
         // Build time
-        assertEquals(new ExampleInjection().buildTimeDefault, ""); // Last initialization wins, which is the original one
-        assertEquals(new ExampleInjection().buildTimePublic, "To be replaced"); // Last initialization wins, which is the original one
-        assertEquals(new ExampleInjection().buildTimePublicFinal, "To be replaced"); // Last initialization wins, which is the original one
-        assertEquals(new ExampleInjection().getBuildTime(), expectedBuildTime);
-        // Build branch
-        assertEquals( new ExampleInjection().getScmBranch(), expectedBranch);
-        // SCM Version
-        assertEquals( new ExampleInjection().getScmVersion(), expectedScmVersion);
+        assertEquals("", // Last initialization wins, which is the original one
+                new ExampleInjection().buildTimeDefault);
 
-        assertEquals(BuildInfo.INSTANCE.getProjectVersion(), expectedVersion);
+        assertEquals("To be replaced", // Last initialization wins, which is the original one
+                new ExampleInjection().buildTimePublic);
+        assertEquals("To be replaced", // Last initialization wins, which is the original one
+                new ExampleInjection().buildTimePublicFinal);
+        assertEquals(expectedBuildTime, new ExampleInjection().getBuildTime());
+        // Build branch
+        assertEquals(expectedBranch, new ExampleInjection().getScmBranch());
+        // SCM Version
+        assertEquals(expectedScmVersion, new ExampleInjection().getScmVersion());
+
+        assertEquals(expectedVersion, BuildInfo.INSTANCE.getProjectVersion());
     }
 }
