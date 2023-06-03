@@ -27,7 +27,7 @@ Check out the [plugin website][site] including [usage][site_usage] for details.
 
 Requirements
 -----------
-* Maven 3.6 or higher
+* Maven 3.8 or higher
 * Java 8 or higher
 
 Development
@@ -37,7 +37,7 @@ Development
 
   `mvn clean install`
 
-  Make sure you got [Maven 3.6+][maven_download] or higher.
+  Make sure you got [Maven 3.8+][maven_download] or higher.
 
 * Build the site
 
