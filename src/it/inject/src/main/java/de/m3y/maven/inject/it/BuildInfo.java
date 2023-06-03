@@ -2,8 +2,9 @@ package de.m3y.maven.inject.it;
 
 /**
  * Example singleton containing build info.
- *
- * See https://sites.google.com/site/io/effective-java-reloaded for suggested Enum singleton.
+ * <p>
+ * See <a href="https://sites.google.com/site/io/effective-java-reloaded">
+ *     "https://sites.google.com/site/io/effective-java-reloaded</a> for suggested Enum singleton.
  */
 public enum BuildInfo {
     INSTANCE;

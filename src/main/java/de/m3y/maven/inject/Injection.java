@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 /**
  * Defines the injection by one or more pointcut(s) and value.
- *
+ * <p>
  * Example pointcut: <code>de.m3y.maven.inject.it.ExampleInjection.getBuildTime</code>
  */
 public class Injection {

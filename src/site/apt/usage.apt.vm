@@ -15,7 +15,7 @@ Using the Maven Injection Plugin
  Hint: Inject into accessor methods instead of class attributes or constants to avoid surprises (compiler inlining etc.)
  Hint: A typical singleton could use a Java Enum, see {{{https://github.com/marcelmay/inject-maven-plugin/tree/master/src/it/inject/src/main/java/de/m3y/maven/inject/it/BuildInfo.java}BuildInfo}} example.
 
- [[3]] Hook plugin into lifecyle after compilation
+ [[3]] Hook plugin into lifecycle after compilation
 
  The plugin runs after compilation in the *process-classes* phase.
 
@@ -53,7 +53,7 @@ Using the Maven Injection Plugin
         </injections>
       </configuration>
       <executions>
-        <execution> <!-- (3) Hook plugin into lifecyle after compilation-->
+        <execution> <!-- (3) Hook plugin into lifecycle after compilation-->
           <phase>process-classes</phase>
           <goals>
             <goal>inject</goal>
