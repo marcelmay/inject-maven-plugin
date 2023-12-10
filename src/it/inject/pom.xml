@@ -20,7 +20,7 @@
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
             <scope>test</scope>
-            <version>5.9.3</version>
+            <version>5.10.1</version>
         </dependency>
     </dependencies>
 
@@ -28,6 +28,7 @@
         <plugins>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.11.0</version>
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>
@@ -36,7 +37,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>buildnumber-maven-plugin</artifactId>
-                <version>3.1.0</version>
+                <version>3.2.0</version>
                 <executions>
                     <execution>
                         <phase>validate</phase>
@@ -108,7 +109,7 @@
             </plugin>
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.1.0</version>
+                <version>3.2.2</version>
                 <configuration>
                     <systemPropertyVariables>
                         <expected.version>${project.version}</expected.version>
@@ -116,7 +117,6 @@
                         <expected.build.time>${maven.build.timestamp}</expected.build.time>
                         <expected.scm.version>${buildNumber}</expected.scm.version>
                     </systemPropertyVariables>
-                    <forkMode>once</forkMode>
                 </configuration>
             </plugin>
         </plugins>
