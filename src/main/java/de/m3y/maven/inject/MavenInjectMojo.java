@@ -93,31 +93,25 @@ public class MavenInjectMojo extends AbstractMojo {
                 handleInject(classLoader, pointcut, value);
             }
         }
-
     }
 
     private void handleInject(ClassLoader classLoader, String pointcut, String value) throws MojoFailureException {
-        SourceTarget sourceTarget = parseSourceTarget(pointcut);
-
         getLog().info("Injecting value '" + value + "' into " + pointcut);
+        SourceTarget sourceTarget = parseSourceTarget(pointcut);
         try {
             final Class<?> clazz = classLoader.loadClass(sourceTarget.clazzName);
-            DynamicType.Builder<?> builder = new ByteBuddy()
-                    .redefine(clazz);
+            DynamicType.Builder<?> builder = new ByteBuddy().redefine(clazz);
             if (hasField(clazz, sourceTarget)) {
                 if (getLog().isDebugEnabled()) {
                     getLog().debug("Found field " + clazz.getDeclaredField(sourceTarget.attribute));
                 }
-                builder = builder
-                        .field(named(sourceTarget.attribute))
-                        .value(value);
+                builder = builder.field(named(sourceTarget.attribute)).value(value);
                 final Field field = clazz.getDeclaredField(sourceTarget.attribute);
                 final int modifiers = field.getModifiers();
                 if (!Modifier.isFinal(modifiers) && !Modifier.isStatic(modifiers)) {
-                    getLog().warn("Non-final variable " +
-                            sourceTarget.clazzName + "." + sourceTarget.attribute +
-                            " initialization conflicts with default-constructor-based" +
-                            " initialisation. Make variable final for expected behaviour.");
+                    getLog().warn("Non-final variable " + sourceTarget.clazzName + "." + sourceTarget.attribute +
+                            " initialization conflicts with default-constructor-based initialisation. " +
+                            "Make variable final for expected behaviour.");
                 }
             } else {
                 final List<Method> declaredMethods = findMethodCandidates(clazz, sourceTarget.attribute);
@@ -126,9 +120,7 @@ public class MavenInjectMojo extends AbstractMojo {
                     if (getLog().isDebugEnabled()) {
                         getLog().debug("Found method " + method);
                     }
-                    builder = builder
-                            .method(named(sourceTarget.attribute))
-                            .intercept(FixedValue.value(value));
+                    builder = builder.method(named(sourceTarget.attribute)).intercept(FixedValue.value(value));
                 } else {
                     throw new MojoFailureException("Found more than one target for method: " + declaredMethods);
                 }
@@ -137,9 +129,10 @@ public class MavenInjectMojo extends AbstractMojo {
                 dynamicType.saveIn(outputDirectory);
             }
         } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        } catch (Exception e) {
             throw new MojoFailureException("Can not load " + sourceTarget.clazzName, e);
+        } catch (Exception e) {
+            throw new MojoFailureException("Can not inject value " + value + " into " +
+                    sourceTarget.clazzName + "." + sourceTarget.attribute, e);
         }
     }
 
@@ -161,8 +154,8 @@ public class MavenInjectMojo extends AbstractMojo {
     private SourceTarget parseSourceTarget(String target) throws MojoFailureException {
         int idx = target.lastIndexOf('.');
         if (idx < 0) {
-            throw new MojoFailureException("Can not parse " + target
-                    + " into pattern <FULL_CLASS_NAME>.<ATTRIBUTE|METHOD>. Expected pattern like foo.Bar.MY_VERSION or foo.Bar.getSomeValue");
+            throw new MojoFailureException("Can not parse " + target +
+                    " into pattern <FULL_CLASS_NAME>.<ATTRIBUTE|METHOD>. Expected pattern like foo.Bar.MY_VERSION or foo.Bar.getSomeValue");
         }
         SourceTarget sourceTarget = new SourceTarget();
         sourceTarget.clazzName = target.substring(0, idx);
