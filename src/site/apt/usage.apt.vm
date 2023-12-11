@@ -19,7 +19,7 @@ Using the Maven Injection Plugin
 
  The plugin runs after compilation in the *process-classes* phase.
 
- [[4]] Add build info plugin for injection SCM version and branch, as an example
+ [[4]] Add build info plugin for injecting the SCM version and branch, as an example
 
 ---
 <build>

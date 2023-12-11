@@ -12,11 +12,11 @@ You can use the plugin to inject any properties, such as build information like 
 The plugin hooks into the Maven lifecycle process-classes - so after compilation but before packaging into e.g. JAR.
 
 Note:
-* It is possible to inject into Java constants, but be aware the Java compiler inlines values during compilation.
+* It is possible to inject into Java constants, but be aware of that the Java compiler inlines values during compilation.
 * It is possible to inject into Java class attribute fields, but be aware the Java compiler inlines initialization into constructor,
   resulting in multiple initializations with last initialization wining.
 * Preferred injection is into accessor methods, resulting in the least amount of surprise by compiler/JVM initialization specifics :-)
-* The plugin uses [Javassist](https://www.javassist.org/) byte code injection library
+* The plugin uses [ByteBuddy](https://github.com/raphw/byte-buddy) byte code injection library
 
 Check out the [plugin website][site] including [usage][site_usage] for details.
 

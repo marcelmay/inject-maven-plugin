@@ -1,7 +1,7 @@
 package de.m3y.maven.inject.it;
 
 /**
- *
+ * Example for injecting values.
  */
 public class ExampleInjection {
     // Constants
@@ -15,6 +15,10 @@ public class ExampleInjection {
     String buildTimeDefault = "";
     public String buildTimePublic = "To be replaced";
     public final String buildTimePublicFinal = "To be replaced";
+
+    public String getBuildTimePublicFinal() {
+        return buildTimePublicFinal;
+    }
 
     public String getVersionAsString() {
         return "To be replaced";

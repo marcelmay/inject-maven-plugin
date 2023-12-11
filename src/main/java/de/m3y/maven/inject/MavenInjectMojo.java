@@ -1,15 +1,27 @@
 package de.m3y.maven.inject;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
-
-import javassist.*;
+import net.bytebuddy.ByteBuddy;
+import net.bytebuddy.dynamic.DynamicType;
+import net.bytebuddy.implementation.FixedValue;
 import org.apache.maven.artifact.DependencyResolutionRequiredException;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.*;
 import org.apache.maven.project.MavenProject;
+
+import java.io.File;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static net.bytebuddy.matcher.ElementMatchers.named;
 
 /**
  * Injects properties into compiled Java code, as constant or method return value.
@@ -57,20 +69,14 @@ public class MavenInjectMojo extends AbstractMojo {
     @Parameter(defaultValue = "${project.build.directory}/classes")
     private File outputDirectory;
 
-    /**
-     * Project compile classpath
-     */
-    @Parameter(property = "project.compileClasspathElements", required = true, readonly = true)
-    private List<String> classpathElements;
-
     public void execute() throws MojoFailureException {
-        ClassPool pool = createClassPool();
+        ClassLoader classLoader = createClassLoader();
         for (Injection injection : injections) {
-            doInject(injection, pool);
+            doInject(classLoader, injection);
         }
     }
 
-    private void doInject(Injection injection, ClassPool pool) throws MojoFailureException {
+    private void doInject(ClassLoader classLoader, Injection injection) throws MojoFailureException {
         String value = injection.getValue();
         if (null == value) {
             throw new MojoFailureException("Value is null for injection " + injection);
@@ -78,67 +84,78 @@ public class MavenInjectMojo extends AbstractMojo {
 
         // Single injection?
         if (null != injection.getPointCut()) {
-            handleInject(pool, injection.getPointCut(), value);
+            handleInject(classLoader, injection.getPointCut(), value);
         }
 
         // Bulk injections?
         if (null != injection.getPointCuts()) {
             for (String pointcut : injection.getPointCuts()) {
-                handleInject(pool, pointcut, value);
+                handleInject(classLoader, pointcut, value);
             }
         }
 
     }
 
-    private void handleInject(ClassPool pool, String pointcut, String value) throws MojoFailureException {
+    private void handleInject(ClassLoader classLoader, String pointcut, String value) throws MojoFailureException {
         SourceTarget sourceTarget = parseSourceTarget(pointcut);
 
         getLog().info("Injecting value '" + value + "' into " + pointcut);
         try {
-            final CtClass clazz = pool.get(sourceTarget.clazzName);
-            if (clazz.isFrozen()) {
-                clazz.defrost();
+            final Class<?> clazz = classLoader.loadClass(sourceTarget.clazzName);
+            DynamicType.Builder<?> builder = new ByteBuddy()
+                    .redefine(clazz);
+            if (hasField(clazz, sourceTarget)) {
+                if (getLog().isDebugEnabled()) {
+                    getLog().debug("Found field " + clazz.getDeclaredField(sourceTarget.attribute));
+                }
+                builder = builder
+                        .field(named(sourceTarget.attribute))
+                        .value(value);
+                final Field field = clazz.getDeclaredField(sourceTarget.attribute);
+                final int modifiers = field.getModifiers();
+                if (!Modifier.isFinal(modifiers) && !Modifier.isStatic(modifiers)) {
+                    getLog().warn("Non-final variable " +
+                            sourceTarget.clazzName + "." + sourceTarget.attribute +
+                            " initialization conflicts with default-constructor-based" +
+                            " initialisation. Make variable final for expected behaviour.");
+                }
+            } else {
+                final List<Method> declaredMethods = findMethodCandidates(clazz, sourceTarget.attribute);
+                if (declaredMethods.size() == 1) {
+                    Method method = declaredMethods.get(0);
+                    if (getLog().isDebugEnabled()) {
+                        getLog().debug("Found method " + method);
+                    }
+                    builder = builder
+                            .method(named(sourceTarget.attribute))
+                            .intercept(FixedValue.value(value));
+                } else {
+                    throw new MojoFailureException("Found more than one target for method: " + declaredMethods);
+                }
             }
-
-            try {
-                handle(clazz, sourceTarget.attribute, value);
-            } catch (NotFoundException e) {
-                throw new MojoFailureException("Can not load " + sourceTarget.clazzName + " attribute/method "
-                        + sourceTarget.attribute, e);
+            try (final DynamicType.Unloaded<?> dynamicType = builder.make()) {
+                dynamicType.saveIn(outputDirectory);
             }
-
-            clazz.writeFile(outputDirectory.getAbsolutePath());
-        } catch (NotFoundException e) {
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (Exception e) {
             throw new MojoFailureException("Can not load " + sourceTarget.clazzName, e);
-        } catch (CannotCompileException e) {
-            throw new MojoFailureException("Can not compile", e);
-        } catch (IOException e) {
-            throw new MojoFailureException("Can write class ", e);
         }
     }
 
-    private void handle(CtClass clazz, String attribute, String value) throws NotFoundException, CannotCompileException {
-        if (getLog().isDebugEnabled()) {
-            getLog().debug("Injecting " + clazz.getName() + "#" + attribute + " with value " + value);
-        }
+    private static List<Method> findMethodCandidates(Class<?> clazz, String methodName) {
+        return Arrays.stream(clazz.getDeclaredMethods())
+                .filter(m -> m.getName().equals(methodName))
+                .collect(Collectors.toList());
+    }
 
-        // Try fields
-        for (CtField field : clazz.getFields()) {
-            if (field.getName().equals(attribute)) {
-                final CtField clazzField = clazz.getField(attribute);
-                clazz.removeField(clazzField);
-                clazz.addField(clazzField, CtField.Initializer.constant(value));
-                return;
-            }
+    private static boolean hasField(Class<?> clazz, SourceTarget sourceTarget) {
+        try {
+            clazz.getDeclaredField(sourceTarget.attribute);
+            return true;
+        } catch (NoSuchFieldException ex) {
+            return false;
         }
-
-        if (getLog().isDebugEnabled()) {
-            getLog().debug("Did not find field " + attribute + ", trying methods ...");
-        }
-
-        // Try method
-        final CtMethod clazzMethod = clazz.getDeclaredMethod(attribute);
-        clazzMethod.setBody("return \"" + value + "\";");
     }
 
     private SourceTarget parseSourceTarget(String target) throws MojoFailureException {
@@ -161,20 +178,21 @@ public class MavenInjectMojo extends AbstractMojo {
         String attribute;
     }
 
-
-    private ClassPool createClassPool() throws MojoFailureException {
+    private URLClassLoader createClassLoader() throws MojoFailureException {
         try {
             List<String> classpathElements = project.getCompileClasspathElements();
-            ClassPool pool = ClassPool.getDefault();
+            List<URL> urls = new ArrayList<>();
             for (Object element : classpathElements) {
                 if (getLog().isDebugEnabled()) {
                     getLog().debug("Adding " + element + " to classpath");
                 }
-                pool.insertClassPath(element.toString());
+                urls.add(new URL("file://" + element.toString() + "/"));
             }
-            return pool;
-        } catch (NotFoundException | DependencyResolutionRequiredException e) {
+            return new URLClassLoader(urls.toArray(new URL[0]), ByteBuddy.class.getClassLoader());
+        } catch (DependencyResolutionRequiredException e) {
             throw new MojoFailureException("Can not load project compile classpath", e);
+        } catch (MalformedURLException e) {
+            throw new RuntimeException(e);
         }
     }
 }

@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>de.m3y.maven</groupId>
     <artifactId>inject-maven-plugin</artifactId>
@@ -6,7 +7,7 @@
     <version>1.5-SNAPSHOT</version>
     <name>Maven injection plugin</name>
     <url>https://github.com/marcelmay/inject-maven-plugin</url>
-    <description>Injects Maven build info like version, build timestamp etc. into compiled Java code when building
+    <description>Injects Maven build info like the version, build timestamp etc. into compiled Java code when building
     </description>
     <inceptionYear>2016</inceptionYear>
 
@@ -69,17 +70,11 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.javassist</groupId>
-            <artifactId>javassist</artifactId>
-            <version>3.29.2-GA</version>
+            <groupId>net.bytebuddy</groupId>
+            <artifactId>byte-buddy</artifactId>
+            <version>1.14.10</version>
         </dependency>
         <!-- Testing -->
-        <dependency>
-            <groupId>org.apache.maven.plugin-testing</groupId>
-            <artifactId>maven-plugin-testing-harness</artifactId>
-            <version>3.3.0</version>
-            <scope>test</scope>
-        </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
@@ -279,7 +274,7 @@
             <build>
                 <plugins>
                     <plugin>
-                      <artifactId>maven-plugin-report-plugin</artifactId>
+                        <artifactId>maven-plugin-report-plugin</artifactId>
                     </plugin>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
