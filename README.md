@@ -17,7 +17,7 @@ Note:
   resulting in multiple initializations with last initialization wining.
 * Preferred injection is into accessor methods, resulting in the least amount of surprise by compiler/JVM initialization specifics :-)
 * The plugin uses [ByteBuddy](https://github.com/raphw/byte-buddy) byte code injection library
-* Check injection, e.g. using the Java Class File Disassembler (javap) on the target class:
+* Check injection, e.g. using the Java Class File Disassembler (javap) on the target class:  
   ```javap -p -constants -c -s -cp ./target/it/inject/target/classes de.m3y.maven.inject.it.ExampleInjection```
 
 Check out the [plugin website][site] including [usage][site_usage] for details.
