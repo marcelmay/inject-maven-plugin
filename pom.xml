@@ -159,7 +159,7 @@
                         <configuration>
                             <rules>
                                 <requireMavenVersion>
-                                    <version>3.6</version>
+                                    <version>3.9</version>
                                 </requireMavenVersion>
                                 <requireJavaVersion>
                                     <version>8</version>

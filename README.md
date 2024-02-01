@@ -29,7 +29,7 @@ Check out the [plugin website][site] including [usage][site_usage] for details.
 
 Requirements
 -----------
-* Maven 3.8 or higher
+* Maven 3.9 or higher
 * Java 8 or higher
 
 Development
