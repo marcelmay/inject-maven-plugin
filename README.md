@@ -39,7 +39,7 @@ Development
 
   `mvn clean install`
 
-  Make sure you got [Maven 3.8+][maven_download] or higher.
+  Make sure you got [Maven 3.9+][maven_download] or higher.
 
 * Build the site
 
