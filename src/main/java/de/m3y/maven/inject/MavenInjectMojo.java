@@ -16,6 +16,7 @@ import java.lang.reflect.Modifier;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -179,7 +180,7 @@ public class MavenInjectMojo extends AbstractMojo {
                 if (getLog().isDebugEnabled()) {
                     getLog().debug("Adding " + element + " to classpath");
                 }
-                urls.add(new URL("file://" + element.toString() + "/"));
+                urls.add(Path.of(element.toString()).toUri().toURL());
             }
             return new URLClassLoader(urls.toArray(new URL[0]), ByteBuddy.class.getClassLoader());
         } catch (DependencyResolutionRequiredException e) {
