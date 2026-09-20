@@ -17,6 +17,10 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <!-- Main sources compile to Java 8 bytecode and use Java 8 APIs -->
+        <maven.compiler.release>8</maven.compiler.release>
+        <!-- Test sources compile to Java 11 bytecode and can use Java 11 APIs -->
+        <maven.compiler.testRelease>11</maven.compiler.testRelease>
     </properties>
 
     <scm>
@@ -105,8 +109,10 @@
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
+                    <debug>true</debug>
+                    <compilerArgs>
+                      <arg>-Xlint</arg>
+                    </compilerArgs>
                 </configuration>
             </plugin>
             <plugin>
