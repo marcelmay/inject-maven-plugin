@@ -3,7 +3,7 @@ Maven Injection Plugin
 
 The plugin *inject-maven-plugin* lets you inject Maven properties into your compiled code as part of your build process.
 
-[![Maven Central](https://img.shields.io/maven-central/v/de.m3y.maven/inject-maven-plugin.svg)](http://search.maven.org/#search%7Cga%7C1%7Cde.m3y.maven.inject-maven-plugin)
+[![Maven Central](https://img.shields.io/maven-central/v/de.m3y.maven/inject-maven-plugin.svg)](http://search.maven.org/#search%7Cga%7C1%7Cde.m3y.maven.inject-maven-plugin) | [![ci](https://github.com/marcelmay/inject-maven-plugin/actions/workflows/ci.yml/badge.svg)](https://github.com/marcelmay/inject-maven-plugin/actions/workflows/ci.yml)
 
 What is it good for?
 --------------------
